@@ -1,3 +1,5 @@
+import { title } from "process";
+
 const router = require("express").Router();
 const prisma = require("../db");
 
@@ -33,7 +35,7 @@ router.get("/", async (req: any, res: any, next: any) => {
 router.get("/:appointmentId", async (req: any, res: any, next: any) => {
   try {
     const oneAppointment = await prisma.appointment.findUnique({
-      where: { id: req.params },
+      where: { id: req.params.appointmentId },
       include: { pet: true },
     });
 

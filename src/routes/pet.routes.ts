@@ -45,17 +45,4 @@ router.get("/:petId", async (req: any, res: any, next: any) => {
   }
 });
 
-//*router.put("/:id", () => {});*//
-
-router.delete("/:petId", async (req: any, res: any, next: any) => {
-  try {
-    const deletedPet = await prisma.pet.delete({
-      where: { id: req.params.petId },
-    });
-    res.json(deletedPet);
-  } catch (error) {
-    next(error);
-  }
-});
-
 module.exports = router;
