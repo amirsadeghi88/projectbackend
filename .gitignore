@@ -23,4 +23,5 @@ ehthumbs.db
 .vscode/*
 
 /generated
+/src/generated
 /dist
