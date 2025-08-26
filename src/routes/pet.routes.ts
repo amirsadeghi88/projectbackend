@@ -1,8 +1,8 @@
 const prisma = require("../db");
-
+import { Request, Response, NextFunction } from "express";
 const router = require("express").Router();
 
-router.post("/", async (req: any, res: any, next: any) => {
+router.post("/", async (req: Request, res: Response, next: NextFunction) => {
   const { name, species, breed, age } = req.body;
 
   try {
@@ -21,7 +21,7 @@ router.post("/", async (req: any, res: any, next: any) => {
   }
 });
 
-router.get("/", async (req: any, res: any, next: any) => {
+router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const allPets = await prisma.pet.findMany({
       include: { appointments: true },
@@ -32,17 +32,20 @@ router.get("/", async (req: any, res: any, next: any) => {
   }
 });
 
-router.get("/:petId", async (req: any, res: any, next: any) => {
-  try {
-    const onePet = await prisma.pet.findUnique({
-      where: { id: req.params.petId },
-      include: { appointments: true },
-    });
+router.get(
+  "/:petId",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const onePet = await prisma.pet.findUnique({
+        where: { id: req.params.petId },
+        include: { appointments: true },
+      });
 
-    res.json(onePet);
-  } catch (error) {
-    next(error);
+      res.json(onePet);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 module.exports = router;

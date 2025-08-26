@@ -12,8 +12,6 @@ const app = express();
 require("./config")(app);
 
 // 👇 Start handling routes here
-const indexRoutes = require("./routes/index.routes");
-app.use("/api", indexRoutes);
 
 const petRoutes = require("./routes/pet.routes");
 app.use("/pets", petRoutes);

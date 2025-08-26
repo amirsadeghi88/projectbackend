@@ -1,9 +1,10 @@
+import { Request, Response, NextFunction } from "express";
 import { title } from "process";
 
 const router = require("express").Router();
 const prisma = require("../db");
 
-router.post("/", async (req: any, res: any, next: any) => {
+router.post("/", async (req: Request, res: Response, next: NextFunction) => {
   const { date, vet, notes, petId } = req.body;
 
   try {
@@ -21,7 +22,7 @@ router.post("/", async (req: any, res: any, next: any) => {
   }
 });
 
-router.get("/", async (req: any, res: any, next: any) => {
+router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const appointments = await prisma.appointment.findMany({
       include: { pet: true },
@@ -32,48 +33,57 @@ router.get("/", async (req: any, res: any, next: any) => {
   }
 });
 
-router.get("/:appointmentId", async (req: any, res: any, next: any) => {
-  try {
-    const oneAppointment = await prisma.appointment.findUnique({
-      where: { id: req.params.appointmentId },
-      include: { pet: true },
-    });
+router.get(
+  "/:appointmentId",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const oneAppointment = await prisma.appointment.findUnique({
+        where: { id: req.params.appointmentId },
+        include: { pet: true },
+      });
 
-    res.json(oneAppointment);
-  } catch (error) {
-    next(error);
+      res.json(oneAppointment);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
-router.put("/:appointmentId", async (req: any, res: any, next: any) => {
-  const { date, vet, notes, petId } = req.body;
+router.put(
+  "/:appointmentId",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { date, vet, notes, petId } = req.body;
 
-  try {
-    const updatedAppointment = await prisma.appointment.update({
-      where: { id: req.params.appointmentId },
-      data: {
-        date: date ? new Date(date) : undefined,
-        vet,
-        notes,
-        petId,
-      },
-    });
+    try {
+      const updatedAppointment = await prisma.appointment.update({
+        where: { id: req.params.appointmentId },
+        data: {
+          date: date ? new Date(date) : undefined,
+          vet,
+          notes,
+          petId,
+        },
+      });
 
-    res.json(updatedAppointment);
-  } catch (error) {
-    next(error);
+      res.json(updatedAppointment);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
-router.delete("/:appointmentId", async (req: any, res: any, next: any) => {
-  try {
-    await prisma.appointment.delete({
-      where: { id: req.params.appointmentId },
-    });
-    res.json({ message: "Appointment deleted" });
-  } catch (error) {
-    next(error);
+router.delete(
+  "/:appointmentId",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await prisma.appointment.delete({
+        where: { id: req.params.appointmentId },
+      });
+      res.json({ message: "Appointment deleted" });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 module.exports = router;
